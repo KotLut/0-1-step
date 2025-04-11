@@ -1,2 +1,4 @@
 # 0/1 step
-Here you will need to make a choice.
+This is an *upcoming* **game** in which you will have to make a **choice**...
+
+> (PS: I write code on Python3 :)
