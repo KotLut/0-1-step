@@ -2,10 +2,23 @@
 from time import sleep
 from random import randint
 
+# ИМПОРТ ГРАФИКИ
+try:
+    from graphicsASCII import *
+except:
+    print('ГРАФИКА ИГРЫ НЕ ЗАГРУЖЕНА!')
+    print('Посьба подтянуть файл "graphicsASCII"')
+    print('в папку с этим файлом')
+    print('и перезапустить игру!')
+    print('ОКНО ИГРЫ ЗАКРОЕТСЯ ЧЕРЕЗ 5 СЕКУНД.')
+    sleep(5)
+
+
 # ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ:
 number_zapusk = 0
 game_restart = 1
-sec_to_exit = 5
+sec_to_exit = 3
+number_intro = 3
 default_levels = 10
 player_levels = 10
 customize_settings = False
@@ -15,30 +28,27 @@ sum_nichya = 0
 
 # ФУНКЦИИ:
 def start_window(pusk):
-    global number_zapusk, customize_settings
+    global number_zapusk, customize_settings, number_intro
     if customize_settings == True:
         print('НАСТРОЙКИ ПРИМЕНЕНЫ!')
         sleep(1)
         customize_settings = False
     elif number_zapusk < 1:
-        print('\tПУСК')
+        print('\tЗАПУСК ИГРЫ')
     else:
         print('\tПЕРЕЗАГРУЗКА...')
         print('')
     number_zapusk += 1
-    start_win = f'''╔═                ═╗
-║▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓║
-║▓║█████░░░░░█░░█░▓║
-║▓║█░░░█░░░░█░░██░▓║
-║▓║█░░░█░░░█░░░░█░▓║
-║▓║█░░░█░░█░░░░░█░▓║
-║▓║█████░█░░░░░░█░▓║
-║▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓║
-╚═  \tЗапуск    ═╝
-    \t№ {number_zapusk}'''
-    for stroka in start_win:
-        sleep(0.002)
-        print(stroka, end='')
+    # ОКНО ГРАФИКИ1
+    if number_intro == 1:
+        print(old_start_win(True))
+    elif number_intro == 2:
+        print(big_start_win(True))
+    else:
+        print(new_start_win(True))
+    print('\tЗАПУСК')
+    print(f'\t№ {number_zapusk}')
+
     return '\n'
 
 
@@ -57,18 +67,18 @@ def global_exit(gl_exit):
     print('\tИНИЦИАЛИЗИРОВАН')
     print('\tВЫХОД ИЗ ПРОГРАММЫ!')
     print('ПРОГРАММА ЗАКРОЕТСЯ ЧЕРЕЗ:')
-    for sec in range(sec_to_exit,0,-1):
-        if sec == 1:
-            print(f'\t\t{sec} секунда')
-        elif 1 < sec <= 3:
-            print(f'\t\t{sec} секунды')
+    for seconds in range(sec_to_exit, 0, -1):
+        if seconds == 1:
+            print(f'\t\t{seconds} секунда')
+        elif 1 < seconds <= 3:
+            print(f'\t\t{seconds} секунды')
         else:
-            print(f'\t\t{sec} секунд')
+            print(f'\t\t{seconds} секунд')
         sleep(1)
     return ''
 
 
-def spravka(help):
+def spravka(game_help):
     print('\t-=СПРАВКА=-')
     print('Отложил интеграцию справки на последующие обновления.')
     print('Пока игра не слишком сложна, потому, просьба, читать сообщения игры')
@@ -100,9 +110,10 @@ def edit_level(lvl):
     return ''
 
 
-def edit_exit(sec):
+def edit_exit(seconds):
     global sec_to_exit, customize_settings
     print('\t(02) Изменение времени выхода')
+    print(f'Сейчас, время выхода составляет: {sec_to_exit}')
     while True:
         print('Выберите время (в секундах) для отключения/перезапуска программы >> ', end='')
         sec_ex = input()
@@ -110,7 +121,29 @@ def edit_exit(sec):
             if type(float(sec_ex)) == float:
                 sec_to_exit = int(sec_ex)
                 customize_settings = True
-                print(f' ПРИНЯТО, теперь время выключения/перезагрузки составит: {player_levels} сек.')
+                print(f' ПРИНЯТО, теперь время выключения/перезагрузки составит: {sec_to_exit} сек.')
+            break
+        except:
+            print('')
+            print('\tВВЕДЕННО НЕКОРРЕКТНОЕ ЗНАЧЕНИЕ!')
+            print('')
+    return ''
+
+
+def edit_zastavka(seconds):
+    global number_intro, customize_settings
+    print('\t(03) Выбор варианта заставки игры.')
+    while True:
+        print('\t╞>"1" - Альфа-версия заставки')
+        print('\t╞>"2" - Большая заставка')
+        print('\t╘>"3" - Новая заставка (рекомендуется)')
+        print('Выберите вариант желаемой заставки >> ', end='')
+        zast = input()
+        try:
+            if type(int(zast)) == int:
+                number_intro = int(zast)
+                customize_settings = True
+                print(f' ПРИНЯТО, выбрана заставка номер: {number_intro}.')
             break
         except:
             print('')
@@ -120,11 +153,12 @@ def edit_exit(sec):
 
 
 def settings(setting):
-    global default_levels, player_levels, sec_to_exit
+    global default_levels, player_levels, sec_to_exit, edit_zastavka
     print('\t-=НАСТРОЙКИ=-')
     print('Возможные действия:')
     print('\t╞>"1" - Выбор количества уровней')
-    print('\t╘>"2" - Изменение времени выхода')
+    print('\t╞>"2" - Изменение времени выхода')
+    print('\t╘>"3" - Выбор варианта заставки')
     print('*Все остальные команды вызывают перезапуск')
     print('')
     choose = input('\t>>')
@@ -132,13 +166,34 @@ def settings(setting):
         print(edit_level(True))
     elif choose == '2':
         print(edit_exit(True))
+    elif choose == '3':
+        print(edit_zastavka(True))
     return ''
 
 
 def about_credits(credits):
+    print('\t-=От автора=-')
     print('Здравствуй игрок, если ты видишь это сообщение, значит ты не случайно сюда зашёл.')
-    print('Благодарю тебя за выбор и запуск игры, в частности именно "Об авторе".')
+    print('Благодарю тебя за выбор и запуск игры, в частности именно "От автора".')
     print('Это то самое окошко в котором я могу в одностороннем порядке пожелать тебе удачной игры.')
+    print('')
+    print('\t(PS: попробуй ввести "10" в главном меню ;)')
+    choose = input('\t>>')
+    if choose == '10':
+        print('Да не здесь! (^-^")')
+        sleep(2)
+    return ''
+
+
+def stats(statistics):
+    global sum_win, sum_nichya, sum_game_over, number_zapusk
+    print('\t-=Статистика=-')
+    print(f'\t\t╟ПОБЕД:{sum_win}')
+    print(f'\t\t╟ВНИЧЬЮ:{sum_nichya}')
+    print(f'\t\t╟ПОРАЖЕНИЙ:{sum_game_over}')
+    print(f'\t\t╙ЗАПУСКОВ ПРОГРАММЫ:{number_zapusk}')
+    print('')
+    choose = input('Введите что-либо чтобы продолжить >> ')
     return ''
 
 
@@ -224,7 +279,7 @@ while game_restart:
     print('\t╠>"2" - Справка')
     print('\t╠>"3" - Настройки')
     print('\t╠>"4" - Статистика')
-    print('\t╠═>"5" - Об авторе')
+    print('\t╠═>"5" - От автора')
     print('\t╚>"0" - Выход')
     print('*Все остальные команды вызывают перезапуск игры')
     print('')
@@ -236,10 +291,13 @@ while game_restart:
     elif choose == '3':
         print(settings(True))
     elif choose == '4':
+        print(stats(True))
+    elif choose == '5':
         print(about_credits(True))
     elif choose == '0':
         print(global_exit(True))
         break
+    elif choose == '10':
+        print(logo_author(True))
     else:
         continue
-
