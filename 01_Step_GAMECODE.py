@@ -4,38 +4,6 @@ from random import randint
 from os import name, system
 
 
-# ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ:
-number_zapusk = 0
-game_restart = True
-sec_to_exit = 3
-number_intro = 3
-default_levels = 10
-player_levels = 10
-customize_settings = False
-sum_win = 0
-sum_game_over = 0
-sum_nichya = 0
-default_podskaz = 4
-player_podskaz = 4
-default_xp = 5
-player_xp = 5
-ochist = True
-
-
-# КЛАСС АЧИВОК
-class Achieve:
-    customize_set = 0
-    old_win = 0
-    big_win = 0
-    ochistka = True
-    ochistka2 = False
-    creditss = False
-    logo = False
-    ten = False
-    hello_world = False
-
-
-
 # ИМПОРТ ГРАФИКИ
 try:
     graphica = open('graphicsASC.txt', encoding='utf-8', errors='ignore').readlines()
@@ -52,14 +20,149 @@ except FileNotFoundError:
     sleep(5)
 
 
+# ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ:
+default_levels = 10
+default_podskaz = 4
+default_xp = 5
+customize_settings = False
+game_restart = True
+
+# ИЗМЕНЯЕМЫЕ ПЕРЕМЕННЫЕ
+number_zapusk = 0
+sec_to_exit = 3
+player_levels = 10
+player_podskaz = 4
+player_xp = 5
+number_intro = 3
+ochist = True
+sum_win = 0
+sum_nichya = 0
+sum_game_over = 0
+
+# КЛАСС АЧИВОК
+class Achieve:
+    customize_set = 0
+    old_win = 0
+    big_win = 0
+    ochistka = 0
+    ochistka2 = 0
+    creditss = 0
+    logo = 0
+    ten = 0
+    hello_world = 0
+
 # ФУНКЦИИ:
+def screen_clear():
+    if ochist == 1:
+        if name == 'nt': # Windows
+            system('cls')
+        elif name == 'posix':    # Unix (Linux or macOS)
+            system('clear')
+
+
+def necor_zn():
+    return '\n\t| ВВЕДЕННО НЕКОРРЕКТНОЕ ЗНАЧЕНИЕ! |\n'
+
+
+def waiting():
+    return input('\tВведите что-нибудь, чтобы продолжить >> ')
+
+# СОХРАНЕНИЯ
+def safe_wr(wr):
+    global number_zapusk
+    global sec_to_exit
+    global player_levels
+    global player_podskaz
+    global player_xp
+    global number_intro
+    global ochist
+    global sum_win
+    global sum_nichya
+    global sum_game_over
+    if wr == 1:
+        with open('save_data.txt','w',encoding='utf-8') as f3:
+            f3.writelines(f'{number_zapusk}\n')
+            f3.writelines(f'{sec_to_exit}\n')
+            f3.writelines(f'{player_levels}\n')
+            f3.writelines(f'{player_podskaz}\n')
+            f3.writelines(f'{player_xp}\n')
+            f3.writelines(f'{number_intro}\n')
+            f3.writelines(f'{int(ochist)}\n')
+            f3.writelines(f'{sum_win}\n')
+            f3.writelines(f'{sum_nichya}\n')
+            f3.writelines(f'{sum_game_over}\n')
+
+            f3.writelines(f'{Achieve.customize_set}\n')
+            f3.writelines(f'{Achieve.old_win}\n')
+            f3.writelines(f'{Achieve.big_win}\n')
+            f3.writelines(f'{Achieve.ochistka}\n')
+            f3.writelines(f'{Achieve.ochistka2}\n')
+            f3.writelines(f'{Achieve.creditss}\n')
+            f3.writelines(f'{Achieve.logo}\n')
+            f3.writelines(f'{Achieve.ten}\n')
+            f3.writelines(f'{int(Achieve.hello_world)}\n')
+
+            f3.close()
+        return print('\n\t\t\tСОХРАНЕНИЕ ЗАПИСАНО!\n')
+
+    elif wr == 2:
+        with open('save_data.txt', 'r', encoding='utf-8') as f2:
+            number_zapusk = int(f2.readline())
+            sec_to_exit = int(f2.readline())
+            player_levels = int(f2.readline())
+            player_podskaz = int(f2.readline())
+            player_xp = int(f2.readline())
+            number_intro = int(f2.readline())
+            ochist = bool(f2.readline())
+            sum_win = int(f2.readline())
+            sum_nichya = int(f2.readline())
+            sum_game_over = int(f2.readline())
+
+            Achieve.customize_set = int(f2.readline())
+            Achieve.old_win = int(f2.readline())
+            Achieve.big_win = int(f2.readline())
+            Achieve.ochistka = int(f2.readline())
+            Achieve.ochistka2 = int(f2.readline())
+            Achieve.creditss = int(f2.readline())
+            Achieve.logo = int(f2.readline())
+            Achieve.ten = int(f2.readline())
+            Achieve.hello_world = bool(f2.readline())
+
+            f2.close()
+        return print('\n\t\t\tСЧИТАНО СОХРАНЕНИЕ!\n')
+
+    else:
+        with open('save_data.txt','w',encoding='utf-8') as f3:
+            f3.writelines(f'{1}\n')     # number_zapusk
+            f3.writelines(f'{3}\n')     # sec_to_exit
+            f3.writelines(f'{10}\n')    # player_levels
+            f3.writelines(f'{4}\n')     # player_podskaz
+            f3.writelines(f'{5}\n')     # player_xp
+            f3.writelines(f'{3}\n')     # number_intro
+            f3.writelines(f'{1}\n')     # ochist
+            f3.writelines(f'{0}\n')     # sum_win
+            f3.writelines(f'{0}\n')     # sum_nichya
+            f3.writelines(f'{0}\n')     # sum_game_over
+
+            f3.writelines(f'{0}\n')     # customize_set
+            f3.writelines(f'{0}\n')     # old_win
+            f3.writelines(f'{0}\n')     # big_win
+            f3.writelines(f'{0}\n')     # ochistka
+            f3.writelines(f'{0}\n')     # ochistka2
+            f3.writelines(f'{0}\n')     # creditss
+            f3.writelines(f'{0}\n')     # logo
+            f3.writelines(f'{0}\n')     # ten
+            f3.writelines(f'{0}\n')     # hello_world
+        return print('\n\t\t\tСОХРАНЕНИЕ "ПО-УМОЛЧАНИЮ"!\n')
+
+
 def graphics(num):
     if num == 1:
         old_s_win = graphica[0:9]
         for wind in old_s_win:
             wind = wind.replace('\n', '')
             sleep(0.002)
-            print(wind)
+            print('\t\t',wind)
     elif num == 2:
         big_s_win = graphica[11:55]
         for wind in big_s_win:
@@ -80,14 +183,13 @@ def graphics(num):
 def start_window():
     global number_zapusk, customize_settings, number_intro
     if customize_settings:
-        print('| НАСТРОЙКИ ПРИМЕНЕНЫ! |')
+        print('\n\t\t| НАСТРОЙКИ ПРИМЕНЕНЫ! |\n')
         sleep(1)
         customize_settings = False
     elif number_zapusk < 1:
-        print('\t| ЗАПУСК ИГРЫ |')
+        print('\n\t\t| ЗАПУСК ИГРЫ |\n')
     else:
-        print('\t| ПЕРЕЗАГРУЗКА... |')
-        print('')
+        print('\n\t\t| ПЕРЕЗАГРУЗКА... |\n')
     number_zapusk += 1
 
     # ОКНО ГРАФИКИ1
@@ -99,29 +201,14 @@ def start_window():
         Achieve.big_win += 1
     else:
         graphics(3)
-    print('\t| ЗАПУСК |')
-    print(f'\t| № {number_zapusk}\t |')
-
-
-def necor_zn():
-    return '\n\t| ВВЕДЕННО НЕКОРРЕКТНОЕ ЗНАЧЕНИЕ! |\n'
-
-def waiting():
-    return input('\tВведите что-нибудь, чтобы продолжить >> ')
-
-
-def screen_clear():
-    if ochist:
-        if name == 'nt': # Windows
-            system('cls')
-        elif name == 'posix':    # Unix (Linux or macOS)
-            system('clear')
+    print('\n\t\t   |   ЗАПУСК   |')
+    print(f'\t\t   |   № {number_zapusk}\t|')
 
 
 def global_exit():
     screen_clear()
     global game_restart, sec_to_exit
-    game_restart = 0
+    game_restart = False
     print('')
     print('\t|    ИНИЦИАЛИЗИРОВАН\t|')
     print('\t|  ВЫХОД ИЗ ПРОГРАММЫ!\t|')
@@ -134,17 +221,15 @@ def global_exit():
         else:
             print(f'\t\t{seconds} секунд')
         sleep(1)
-    return ''
 
 
 def spravka():
     screen_clear()
-    print('\n\t\t---/===/  СПРАВКА  \===\---\n')
-    print('Отложил интеграцию справки на последующие обновления.')
-    print('Пока игра не слишком сложна, потому, просьба, читать сообщения игры')
-    print('Да...')
+    print('\n\t\t---/===/  СПРАВКА  \\===\\---\n')
+    print('\tСправка появится в следущем обновлении!')
+    print('\tПока, просьба, читать сообщения игры')
+    print('\t ;) ')
     waiting()
-    return ''
 
 
 def edit_level():
@@ -156,8 +241,7 @@ def edit_level():
     else:
         print(f'\tУровней выбрано ранее: {player_levels}')
     while True:
-        print('\tВыберите желаемое количество уровней:', end='')
-        pl_levels = input()
+        pl_levels = input('\tВыберите желаемое количество уровней: ')
         try:
             if type(int(pl_levels)) == int:
                 player_levels = int(pl_levels)
@@ -184,8 +268,7 @@ def edit_podskazka():
     else:
         print(f'\tЧастота подсказок, выбранная ранее: {player_podskaz}')
     while True:
-        print('\tВыберите частоту подсказок на уровнях:', end='')
-        pl_podsk = input()
+        pl_podsk = input('\tВыберите частоту подсказок на уровнях: ')
         try:
             if type(int(pl_podsk)) == int:
                 if int(pl_podsk) == 0:
@@ -213,8 +296,7 @@ def edit_xp():
     else:
         print(f'\tКоличество здоровья, выбранное ранее: {player_xp}')
     while True:
-        print('\tВыберите количество здоровья на уровнях:', end='')
-        pl_xp = input()
+        pl_xp = input('\tВыберите количество здоровья на уровнях: ')
         try:
             if type(int(pl_xp)) == int:
                 if int(pl_xp) == 0:
@@ -238,8 +320,7 @@ def edit_exit():
     print('\n\t| (04) Изменение времени выхода |\n')
     print(f'\tСейчас, время выхода составляет: {sec_to_exit}')
     while True:
-        print('\tВыберите время (в секундах) для отключения/перезапуска программы >> ', end='')
-        sec_ex = input()
+        sec_ex = input('\tВыберите время (в секундах) для отключения/перезапуска программы: ')
         try:
             if type(float(sec_ex)) == float:
                 sec_to_exit = int(sec_ex)
@@ -260,9 +341,8 @@ def edit_zastavka():
     while True:
         print('\t\t╞>"1" - Альфа-версия заставки')
         print('\t\t╞>"2" - Большая заставка')
-        print('\t\t╘>"3" - Новая заставка (рекомендуется)\n')
-        print('\tВыберите вариант желаемой заставки >> ', end='')
-        zast = input()
+        print('\t\t╘>"3" - Новая заставка (рекомендуется)')
+        zast = input('\n\tВыберите вариант желаемой заставки >> ')
         try:
             if type(int(zast)) == int:
                 number_intro = int(zast)
@@ -272,22 +352,50 @@ def edit_zastavka():
             break
         except ValueError:
             print(necor_zn())
+    waiting()
     return settings()
+
+
+def edit_saves():
+    screen_clear()
+    if choose == '11':
+        print('\n\t\t| БЫСТРЫЙ ВЫЗОВ ДЕЙСТВИЙ СОХРАНЕНИЙ |')
+        print('\t   (быстрый переход для продвинутых пользователей)')
+    global customize_settings
+    print('\n\t\t| (11) Действия с СОХРАНЕНИЕМ ИГРЫ  |')
+    print('\t\t\t╞>"1" - Запись текущего прогресса')
+    print('\t\t\t╞>"2" - Чтение сохранения')
+    print('\t\t\t╘>"3" - Запись данных "по-умолчанию" в сохранение')
+    print('\t\t\t        *Это не изменит данные текущей игры')
+    print('\n\t\tВыберите действие с сохранением >> ', end='')
+    sohr = input()
+    if sohr == '1':
+        safe_wr(1)
+    elif sohr == '2':
+        safe_wr(2)
+    elif sohr == '3':
+        safe_wr(3)
+    else:
+        print('\n\t\t\tНичего не изменено!\n')
+    waiting()
+    if choose != '11':
+        return settings()
 
 
 def settings():
     global ochist
     screen_clear()
-    print('\n\t\t---/===/ НАСТРОЙКИ \===\---\n')
+    print('\n\t\t---/===/ НАСТРОЙКИ \\===\\---\n')
     print('\tВозможные действия:')
-    print('\t\t╞>"1" - Выбор количества уровней')
-    print('\t\t╞>"2" - Выбор количества подсказок')
-    print('\t\t╞>"3" - Выбор количества здоровья')
-    print('\t\t╞>"4" - Изменение времени выхода')
-    print('\t\t╞>"5" - Выбор варианта заставки')
-    print('\t\t╘>"0" - Вкл./Выкл. Обновления экрана')
-    print('\n\t*Все остальные команды перезапускают игру\n')
-    settings_choose = input('\t>>')
+    print('\t\t║ ╞>"1" - Выбор количества уровней')
+    print('\t\t║ ╞>"2" - Выбор количества подсказок')
+    print('\t\t║ ╞>"3" - Выбор количества здоровья')
+    print('\t\t║ ╞>"4" - Изменение времени выхода')
+    print('\t\t║ ╞>"5" - Выбор варианта заставки')
+    print('\t\t║ ╘>"0" - Вкл./Выкл. Обновления экрана')
+    print('\t\t╚═>"11" - Действия с СОХРАНЕНИЕМ')
+    print('\n\t*Все остальные команды перезапускают игру')
+    settings_choose = input('\n\t>>')
     if settings_choose == '1':
         print(edit_level())
     elif settings_choose == '2':
@@ -302,38 +410,36 @@ def settings():
         if ochist:
             ochist = False
             print('\n\tВЫКЛючено обновление экрана\n')
-            Achieve.ochistka = False
+            Achieve.ochistka = 1
         else:
             ochist = True
             print('\n\tВКЛючено обновление экрана\n')
-            if not Achieve.ochistka:
-                Achieve.ochistka2 = True
+            if Achieve.ochistka > 0:
+                Achieve.ochistka2 = 1
         waiting()
-    return ''
+    elif settings_choose == '11':
+        print(edit_saves())
 
 
-def about_credits():
+def stats():
     screen_clear()
-    print('\n\t\t---/===/ От автора \===\---\n')
-    print('\tЗдравствуй игрок, если ты видишь это сообщение, значит ты не случайно сюда зашёл.')
-    print('\tБлагодарю тебя за выбор и запуск игры, в частности именно "От автора".')
-    print('\tЭто то самое окошко в котором я могу в одностороннем порядке пожелать тебе удачной игры.')
-    print('\n\t(PS: попробуй ввести "10" в главном меню ;)\n')
-    credits_choose = input('\t>>')
-    if credits_choose == '10':
-        print('\tДа не здесь! (^-^")')
-        sleep(2)
-        Achieve.ten = True
-    Achieve.creditss = True
-    return ''
+    global sum_win, sum_nichya, sum_game_over, number_zapusk
+    print('\n\t---/===/ СТАТИСТИКА \\===\\---')
+    print(f'\t\t ╟ПОБЕД:{sum_win}')
+    print(f'\t\t ╟ВНИЧЬЮ:{sum_nichya}')
+    print(f'\t\t ╟ПОРАЖЕНИЙ:{sum_game_over}')
+    print('\t\t ║')
+    print(f'\t\t ╙ЗАПУСКОВ ПРОГРАММЫ:{number_zapusk}')
+    print('')
+    waiting()
 
 
 def dostyagi():
     screen_clear()
     global number_zapusk, sum_win, sum_nichya, sum_game_over
-    print('\n\t\t---/===/ ДОСТИЖЕНИЯ \===\---\n')
+    print('\n\t\t---/===/ ДОСТИЖЕНИЯ \\===\\---\n')
     print('\tКЛАССИЧЕСКИЕ:')
-    if number_zapusk > 0:
+    if number_zapusk > 10:
         print(f'\t╠═> ЗАПУСК_01: Перезапустить "01_Step" 10 и более раз')
     else:
         print('\t╟')
@@ -389,56 +495,56 @@ def dostyagi():
         print(f'\t╠═> BIG-LOGO: Увидеть большую версию заставки ({Achieve.big_win})')
     else:
         print('\t╟')
-    if not Achieve.ochistka:
+    if Achieve.ochistka > 0:
         print(f'\t╠═> ЛИНИЯМИ: Убрать автоочистку aka. ВЫКЛючить автообновление экрана')
     else:
         print('\t╟')
-    if Achieve.ochistka2:
+    if Achieve.ochistka2 > 0:
         print(f'\t╠═> ТАК_ЛУЧШЕ: Всё-таки включить автооичтску aka. снова ВКЛючить автообновление экрана')
     else:
         print('\t╟')
-    if Achieve.creditss:
+    if Achieve.creditss > 0:
         print(f'\t╚═> ЧИТАТЕЛЬ: Посмотреть раздел "От автора"')
     else:
         print('\t╙')
 
     print('\n\tРЕДКИЕ:')
-    if Achieve.ten:
+    if Achieve.ten > 0:
         print(f'\t╠═> ^-^: Увидеть микро-пасхалку в разделе "От автора" ({Achieve.customize_set })')
     else:
         print('\t╟')
-    if Achieve.logo:
+    if Achieve.logo > 0:
         print(f'\t╚═> ВПЕЧАТЛЁН?: "Выбрать" пасхалку "10" в Главном меню')
     else:
         print('\t╙')
     print('')
     print('\tКОДЕРОВСКАЯ:\taka. (OPEN-SOURCE code)')
-    if Achieve.hello_world:
+    if Achieve.hello_world > 0:
         print(f'\t╚═> МЕГАХОРОШ: Поменять переменную в окончании файла игры')
     else:
         print('\t╙X','Найди "hello_world" в 660+ строке кода.') # Пофикси ;)
     print('')
     waiting()
-    return ''
 
 
-def stats():
+def about_credits():
     screen_clear()
-    global sum_win, sum_nichya, sum_game_over, number_zapusk
-    print('\n\t---/===/ СТАТИСТИКА \===\---')
-    print(f'\t\t ╟ПОБЕД:{sum_win}')
-    print(f'\t\t ╟ВНИЧЬЮ:{sum_nichya}')
-    print(f'\t\t ╟ПОРАЖЕНИЙ:{sum_game_over}')
-    print('\t\t ║')
-    print(f'\t\t ╙ЗАПУСКОВ ПРОГРАММЫ:{number_zapusk}')
-    print('')
-    waiting()
-    return ''
+    print('\n\t\t---/===/ От автора \\===\\---\n')
+    print('\tЗдравствуй игрок, если ты видишь это сообщение, значит ты не случайно сюда зашёл.')
+    print('\tБлагодарю тебя за выбор и запуск игры, в частности именно "От автора".')
+    print('\tЭто то самое окошко в котором я могу в одностороннем порядке пожелать тебе удачной игры.')
+    print('\n\t(PS: попробуй ввести "10" в главном меню ;)\n')
+    credits_choose = input('\t>>')
+    if credits_choose == '10':
+        print('\tДа не здесь! (^-^")')
+        sleep(2)
+        Achieve.ten = True
+    Achieve.creditss = True
 
 
 def itogi_game(vern,nevern):
     global sum_win, sum_game_over, sum_nichya
-    print('\t---===/ ИТОГИ ИГРЫ \===---')
+    print('\t---===/ ИТОГИ ИГРЫ \\===---')
     print(f'\t\tПОБЕД: {vern}')
     print(f'\t\tПОРАЖЕНИЙ: {nevern}')
     print('\t\tПОТОМУ', end='-->')
@@ -461,7 +567,7 @@ def classic_game():
     screen_clear()
     global default_levels, player_levels
 
-    print('\n---/===/\tКЛАССИЧЕСКАЯ ИГРА\t\===\---\n')
+    print('\n---/===/\tКЛАССИЧЕСКАЯ ИГРА\t\\===\\---\n')
     print('\tКоличество уровней')
     if default_levels == player_levels:
         print(f'\t(установлено по умолчанию): {default_levels}')
@@ -496,7 +602,7 @@ def all_or_nothing():
     screen_clear()
     global default_levels, player_levels
 
-    print('\n---/===/  РЕЖИМ ИГРЫ: "ВСЁ ИЛИ НИЧЕГО"  \===\---\n')
+    print('\n---/===/  РЕЖИМ ИГРЫ: "ВСЁ ИЛИ НИЧЕГО"  \\===\\---\n')
     print('\tКоличество уровней')
     if default_levels == player_levels:
         print(f'\t(установлено по умолчанию): {default_levels}')
@@ -534,7 +640,7 @@ def podskaz_game():
     global default_levels, player_levels
     global default_podskaz, player_podskaz
 
-    print('\n---/===/\tИГРА С ПОДСКАЗКАМИ!\t\===\---\n')
+    print('\n---/===/\tИГРА С ПОДСКАЗКАМИ!\t\\===\\---\n')
     print(f'\tПодсказки будут появляться раз в ')
     if default_podskaz == player_podskaz:
         print(f'\t(установлено по умолчанию): {default_podskaz} ур.')
@@ -584,7 +690,7 @@ def xp_game():
     screen_clear()
     global default_xp, player_xp
 
-    print('\n---/===/\tРежим игры "ЖИЗНИ"\t\===\---\n')
+    print('\n---/===/\tРежим игры "ЖИЗНИ"\t\\===\\---\n')
     print('\tКоличество здоровья')
     if default_xp == player_xp:
         print(f'\t(установлено по умолчанию):')
@@ -628,12 +734,12 @@ base = 'teleport'
 while game_restart:
     screen_clear()
     start_window()
-    print('\n---/===/\tДОБРО ПОЖАЛОВАТЬ!\t\===\---\n')
+    print('\n---/===/\tДОБРО ПОЖАЛОВАТЬ!\t\\===\\---\n')
     if number_zapusk == 1:
         print('\tИгра запущена первый раз!')
         print('\tНе желаете ли прочесть Справку?')
         print('\tНажмите "5" для вызова Справки\n')
-    print('\t---/===/  ГЛАВНОЕ МЕНЮ:  \===\---\t')
+    print('\t---/===/  ГЛАВНОЕ МЕНЮ:  \\===\\---\t')
     print('\tВозможные действия:')
     print('\t╠>"1" - Классическая игра')
     print('\t╠>"2" - Режим "Всё или ничего"')
@@ -653,25 +759,25 @@ while game_restart:
         print('**\t\t**Почти все ;)')
     choose = input('\t>>')
     if choose == '1':
-        print(classic_game())
+        classic_game()
     elif choose == '2':
-        print(all_or_nothing())
+        all_or_nothing()
     elif choose == '3':
-        print(xp_game())
+        xp_game()
     elif choose == '4':
-        print(podskaz_game())
+        podskaz_game()
     elif choose == '5':
-        print(spravka())
+        spravka()
     elif choose == '6':
-        print(settings())
+        settings()
     elif choose == '7':
-        print(stats())
+        stats()
     elif choose == '8':
-        print(dostyagi())
+        dostyagi()
     elif choose == '9':
-        print(about_credits())
+        about_credits()
     elif choose == '0':
-        print(global_exit())
+        global_exit()
         break
     elif choose == '10':
         screen_clear()
@@ -684,5 +790,7 @@ while game_restart:
         if choose == '10':
             print('Ну шаришь-шаришь! \Оꞈо/ ')
             sleep(1)
+    elif choose == '11':
+        edit_saves()
     else:
         continue
