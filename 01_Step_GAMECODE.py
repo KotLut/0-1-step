@@ -1,8 +1,9 @@
+# v0.9a 01_Step
 # ИМПОРТ:
 from time import sleep
 from random import randint
 from os import name, system
-
+import webbrowser as web
 
 # ФУНКЦИЯ ОЖИДАНИЯ действий от игрока. Нужна именно здесь, на случай ошибок.
 def waiting():
@@ -49,7 +50,7 @@ player_levels = 10
 player_podskaz = 4
 player_xp = 5
 number_intro = 3
-ochist = True
+ochist = 1
 sum_win = 0
 sum_nichya = 0
 sum_game_over = 0
@@ -65,6 +66,10 @@ class Achieve:
     logo = 0
     ten = 0
     hello_world = 0
+    watch_saves = 0
+    zap1 = 0
+    zap2 = 0
+    zap3 = 0
 
 # ФУНКЦИИ:
 def screen_clear():
@@ -116,6 +121,10 @@ def safe_wr(wr):
                 f3.writelines(f'{Achieve.logo}\n')
                 f3.writelines(f'{Achieve.ten}\n')
                 f3.writelines(f'{int(Achieve.hello_world)}\n')
+                f3.writelines(f'{Achieve.watch_saves}\n')
+                f3.writelines(f'{Achieve.zap1}\n')
+                f3.writelines(f'{Achieve.zap2}\n')
+                f3.writelines(f'{Achieve.zap3}\n')
 
                 f3.close()
             return print('\n\t\t\tСОХРАНЕНИЕ ЗАПИСАНО!\n')
@@ -131,7 +140,7 @@ def safe_wr(wr):
                 player_podskaz = int(f2.readline())
                 player_xp = int(f2.readline())
                 number_intro = int(f2.readline())
-                ochist = bool(f2.readline())
+                ochist = int(f2.readline())
                 sum_win = int(f2.readline())
                 sum_nichya = int(f2.readline())
                 sum_game_over = int(f2.readline())
@@ -144,7 +153,11 @@ def safe_wr(wr):
                 Achieve.creditss = int(f2.readline())
                 Achieve.logo = int(f2.readline())
                 Achieve.ten = int(f2.readline())
-                Achieve.hello_world = bool(f2.readline())
+                Achieve.hello_world = int(f2.readline())
+                Achieve.watch_saves = int(f2.readline())
+                Achieve.zap1 = int(f2.readline())
+                Achieve.zap2 = int(f2.readline())
+                Achieve.zap3 = int(f2.readline())
 
                 f2.close()
             return print('\n\t\t\tСЧИТАНО СОХРАНЕНИЕ!\n')
@@ -175,6 +188,10 @@ def safe_wr(wr):
                 f3.writelines(f'{0}\n')     # logo
                 f3.writelines(f'{0}\n')     # ten
                 f3.writelines(f'{0}\n')     # hello_world
+                f3.writelines(f'{0}\n')     # watch_saves
+                f3.writelines(f'{0}\n')     # zap1
+                f3.writelines(f'{0}\n')     # zap2
+                f3.writelines(f'{0}\n')     # zap3
             return print('\n\t\t\tСОХРАНЕНИЕ "ПО-УМОЛЧАНИЮ"!\n')
 
 
@@ -237,11 +254,11 @@ def exit_global():
     print('\tПРОГРАММА ЗАКРОЕТСЯ ЧЕРЕЗ:')
     for seconds in range(sec_to_exit, 0, -1):
         if seconds == 1:
-            print(f'\t\t{seconds} секунда')
+            print(f'\t     {seconds}\tсекунду')
         elif 1 < seconds <= 3:
-            print(f'\t\t{seconds} секунды')
+            print(f'\t     {seconds}\tсекунды')
         else:
-            print(f'\t\t{seconds} секунд')
+            print(f'\t     {seconds}\tсекунд')
         sleep(1)
 
 
@@ -664,6 +681,7 @@ def edit_saves():
         safe_wr(3)
     else:
         print('\n\t\t\tНичего не изменено!\n')
+    Achieve.watch_saves = 1
     waiting()
     if choose != '11':
         return settings()
@@ -695,11 +713,11 @@ def settings():
         edit_zastavka()
     elif settings_choose == '0':
         if ochist:
-            ochist = False
+            ochist = 0
             print('\n\tВЫКЛючено обновление экрана\n')
             Achieve.ochistka = 1
         else:
-            ochist = True
+            ochist = 1
             print('\n\tВКЛючено обновление экрана\n')
             if Achieve.ochistka > 0:
                 Achieve.ochistka2 = 1
@@ -792,6 +810,10 @@ def dostyagi():
         print(f'\t╠═> ТАК_ЛУЧШЕ: Всё-таки включить автооичтску aka. снова ВКЛючить автообновление экрана')
     else:
         print('\t╟')
+    if Achieve.watch_saves > 0:
+        print(f'\t╠═> CОХРАНИТЬ: Побывать в меню сохранений')
+    else:
+        print('\t╟')
     if Achieve.creditss > 0:
         print(f'\t╚═> ЧИТАТЕЛЬ: Посмотреть раздел "От автора"')
     else:
@@ -831,6 +853,23 @@ def about_credits():
     Achieve.creditss = True
 
 
+def logo_author():
+    screen_clear()
+    print('\tПожалуйста, увеличь размер окна Игры,')
+    print('\tтак ты увидишь то, что нужно ;)')
+    input('\tВведи что-нибудь как будешь готов >> ')
+    graphics(10)
+    Achieve.logo = 1
+    print('''\tЕсли хочешь увидеть ещё одно лого связанное с
+    \t01_Step, то введи "10" ниже ;)
+    \t(Потребуется подключение к Сети)
+    ''')
+    choose_open_logo = input('\t>> ')
+    if choose_open_logo == '10':
+        web.open('https://raw.githubusercontent.com/KotLut/01_Step/refs/heads/main/01_Step_alpha-logo.png')
+        sleep(1)
+
+
 def itogi_game(vern,nevern):
     global sum_win, sum_game_over, sum_nichya
     print('\t---===/ ИТОГИ ИГРЫ \\===---')
@@ -868,7 +907,11 @@ def classic_game():
     for level in range(1,lvl+1):
         print(f'\n\t╔═══\t-=/ УРОВЕНЬ {level} \\=-\t═══╗')
         choice_choose = input('\t║Ваше число >>\t')
-        randomize = str(randint(0, 1))
+        try:
+            choice_choose = int(choice_choose)
+        except ValueError:
+            print(necor_zn())
+        randomize = (randint(0, 100)%2)
         print(f'\t║Рандом = \t{randomize}')
         if choice_choose == randomize:
             print('\t║ВЕРНО!\t\t√  ')
@@ -879,7 +922,7 @@ def classic_game():
         print(f'\t╚═══\t-=\\ УРОВЕНЬ {level} /=-\t═══╝\n')
         waiting()
         screen_clear()
-    sleep(1)
+    sleep(0.5)
     print(itogi_game(vern,nevern))
     waiting()
 
@@ -898,14 +941,21 @@ def all_or_nothing():
         lvl = player_levels
 
     print('\n\t\tПОЕХАЛИ!\n')
-    numer = input('Ваше число >> ')
+
+    while True:
+        numer = input(' Ваше число >> ')
+        try:
+            numer = int(numer)
+            break
+        except ValueError:
+            print(necor_zn())
 
     vern = 0
     nevern = 0
     print(f'╔════\t     -=/ ВСЁ ИЛИ НИЧЕГО \\=-\t   ════╗')
     print('║\t| № Ур.\t| Ваш.Ч.| Сл.Ч.\t| +/-  |       ║')
     for level in range(1, lvl + 1):
-        randomize = str(randint(0, 1))
+        randomize = (randint(0, 100) % 2)
         print(f'║\t| {level}\t| {numer}\t| {randomize}\t|',end=' ')
         if numer == randomize:
             print(' √   |       ║')
@@ -913,12 +963,26 @@ def all_or_nothing():
         else:
             print(' X   |       ║')
             nevern += 1
-        sleep(0.1)
+        sleep(0.05)
     print(f'╚════\t════════════════════════════════   ════╝')
     print('')
-    sleep(1)
+    sleep(0.5)
     print(itogi_game(vern,nevern))
     waiting()
+
+
+def xp_print(xp):
+    print(f'\t\t  {xp}\t', end='')
+    for xp_show in range(1, xp + 1):
+        if xp_show <= 25:
+            if xp_show == 25:
+                print('♥ ...')
+            elif xp_show == xp:
+                print('♥')
+            elif xp_show % 5 != 0:
+                print('♥', end='')
+            else:
+                print('♥', end='\n\t\t\t')
 
 
 def xp_game():
@@ -929,23 +993,29 @@ def xp_game():
     print('\tКоличество здоровья')
     if default_xp == player_xp:
         print(f'\t(установлено по умолчанию):')
-        print(f'\t\t{default_xp}', '♥' * default_xp)
+        xp_print(default_xp)
         xp = default_xp
     else:
         print(f'\t(в соответствии с пользовательской настройкой):')
-        print(f'\t\t{player_xp}', '♥' * player_xp)
+        xp_print(player_xp)
         xp = player_xp
-    print('\n\t\tПОЕХАЛИ!\n')
+    print('\n\t\t     ПОЕХАЛИ!\n')
 
     vern = 0
     nevern = 0
     level = 0
+
     while xp > 0:
         level += 1
-        print('\t\t',f'{xp}','♥'*xp)
+        if level > 1:
+            xp_print(xp)
         print(f'\t╔═══\t-=/  УРОВЕНЬ {level}   \\=-\t═══╗')
         xp_choose = input('\t║Ваше число >>\t')
-        randomize = str(randint(0, 1))
+        try:
+            xp_choose = int(xp_choose)
+        except ValueError:
+            print(necor_zn())
+        randomize = (randint(0, 100) % 2)
         print(f'\t║Рандом = \t{randomize}')
         if xp_choose == randomize:
             print('\t║ВЕРНО!\t\t√  ')
@@ -954,7 +1024,7 @@ def xp_game():
             print('\t║НЕВЕРНО.\tX  ')
             nevern += 1
             xp -= 1
-        print(f'\t╚═══\t-=\\ Здоровья: {xp}♥ /=-\t═══╝')
+        print(f'\t╚═══\t-=\\ Здоровья: {xp} ♥ /=-\t═══╝')
         waiting()
         screen_clear()
     print('\n\tЗДОРОВЬЕ ЗАКОНЧИЛОСЬ!\n')
@@ -989,15 +1059,23 @@ def podskaz_game():
     nevern = 0
 
     for level in range(1, lvl + 1):
+        randomize = (randint(0, 100) % 2)
         print(f'\n\t╔═══\t-=/ УРОВЕНЬ {level} \\=-\t═══╗')
+
         if level % pods == 0:
-            randomize = str(randint(0, 1))
             print(f'\t║РАНДОМ = \t{randomize}')
             podskaz_choose = input('\t║Ваше число !!\t')
+            try:
+                podskaz_choose = int(podskaz_choose)
+            except ValueError:
+                print(necor_zn())
 
         else:
             podskaz_choose = input('\t║Ваше число >>\t')
-            randomize = str(randint(0, 1))
+            try:
+                podskaz_choose = int(podskaz_choose)
+            except ValueError:
+                print(necor_zn())
             print(f'\t║Рандом = \t{randomize}')
 
         if podskaz_choose == randomize:
@@ -1009,7 +1087,7 @@ def podskaz_game():
         print(f'\t╚═══\t-=\\ УРОВЕНЬ {level} /=-\t═══╝\n')
         waiting()
         screen_clear()
-    sleep(1)
+    sleep(0.5)
     print(itogi_game(vern,nevern))
     waiting()
 
@@ -1039,10 +1117,10 @@ while game_restart:
     print('\t╚>"0" - Выход')
     print('\n\t*Все остальные команды перезапускают Игру',end='')
     Achieve.hello_world = False     # Вот этот 'hello_world' ;)
-    if not Achieve.logo:
-        print('')
-    else:
+    if Achieve.logo or Achieve.watch_saves:
         print('**\t\t**Почти все ;)')
+    else:
+        print('')
     choose = input('\n\t Выбор действия >> ')
     if choose == '1':
         classic_game()
@@ -1066,16 +1144,7 @@ while game_restart:
         exit_global()
         break
     elif choose == '10':
-        screen_clear()
-        print('\tПожалуйста, увеличь размер окна Игры,')
-        print('\tтак ты увидишь то, что нужно ;)')
-        input('\tВведи что-нибудь как будешь готов >> ')
-        graphics(10)
-        Achieve.logo = True
-        choose = input('\t>> ')
-        if choose == '10':
-            print('Ну шаришь-шаришь! \Оꞈо/ ')
-            sleep(1)
+        logo_author()
     elif choose == '11':
         edit_saves()
     else:
